@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GEOG 458 Lab 04 – Custom Tile Sets</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Title + description box */
+        #map-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 14px;
+            border-radius: 4px;
+            z-index: 2;
+            max-width: 320px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #map-title h1 {
+            font-size: 16px;
+            margin: 0 0 5px 0;
+        }
+
+        #map-title p {
+            font-size: 12px;
+            margin: 0;
+        }
+
+        /* Layer switcher menu */
+        #menu {
+            background: #fff;
+            position: absolute;
+            z-index: 2;
+            top: 10px;
+            right: 10px;
+            border-radius: 3px;
+            width: 180px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #menu a {
+            font-size: 13px;
+            color: #404040;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        #menu a:last-child {
+            border: none;
+        }
+
+        #menu a:hover {
+            background-color: #f8f8f8;
+        }
+
+        #menu a.active {
+            background-color: #3887be;
+            color: #ffffff;
+        }
+
+        #menu a.active:hover {
+            background: #3074a4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map-title">
+        <h1>GEOG 458 Lab 04 — Custom Tile Sets</h1>
+        <p id="map-description">
+            Toggle between basemaps and thematic layers created using Mapbox Studio and QGIS.
+        </p>
+    </div>
+
+    <nav id="menu"></nav>
+    <div id="map"></div>
+
+    <script>
+        mapboxgl.accessToken =
+            'pk.eyJ1IjoiamthbmRhIiwiYSI6ImNtaGN5c3JwbDIyNDUybHBxM2VweHBrNzYifQ.Akume5yUr5MZyYxPQq9EjA';
+
+        // Default Mapbox basemap (always underneath)
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [-122.33, 47.61],
+            zoom: 12
+        });
+
+        // Add zoom + scale controls
+        map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+        map.addControl(new mapboxgl.ScaleControl({ maxWidth: 100, unit: 'imperial' }));
+
+        const tilesets = [
+            {
+                id: 'tileset1',
+                folder: 'tileset1',
+                name: 'Modified Basemap',
+                description:
+                    'Custom basemap edited from a Mapbox dark style with modified fonts, landmarks, and dark blue water.',
+            },
+            {
+                id: 'tileset2',
+                folder: 'tileset2',
+                name: 'Seattle Parks',
+                description:
+                    'Thematic map showing Seattle parks styled in green to represent recreational and environmental spaces.',
+            },
+            {
+                id: 'tileset3',
+                folder: 'tileset3',
+                name: 'Basemap + Data',
+                description:
+                    'Combination of the custom basemap and Seattle parks to show thematic data in geographic context.',
+            },
+            {
+                id: 'tileset4',
+                folder: 'tileset4',
+                name: 'UW Themed Map',
+                description:
+                    'University of Washington themed map designed in Mapbox Studio using UW colors and campus landmarks.',
+            }
+        ];
+
+        map.on('load', () => {
+
+            tilesets.forEach(ts => {
+                map.addSource(ts.id, {
+                    type: 'raster',
+                    tiles: [`assets/${ts.folder}/{z}/{x}/{y}.png`],
+                    tileSize: 256,
+                    attribution: 'Map tiles designed by You'
+                });
+
+                map.addLayer({
+                    id: ts.id,
+                    type: 'raster',
+                    source: ts.id,
+                    layout: {
+                        visibility: 'none'
+                    }
+                });
+            });
+        });
+
+        map.on('idle', () => {
+            tilesets.forEach(ts => {
+                if (!map.getLayer(ts.id) || document.getElementById(ts.id)) return;
+
+                const link = document.createElement('a');
+                link.id = ts.id;
+                link.href = '#';
+                link.textContent = ts.name;
+
+                link.onclick = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Turn off all layers
+                    tilesets.forEach(other => {
+                        map.setLayoutProperty(other.id, 'visibility', 'none');
+                        const btn = document.getElementById(other.id);
+                        if (btn) btn.className = '';
+                    });
+
+                    // Turn on selected layer
+                    map.setLayoutProperty(ts.id, 'visibility', 'visible');
+                    this.className = 'active';
+
+                    // Update description
+                    document.getElementById('map-description').textContent = ts.description;
+                };
+
+                document.getElementById('menu').appendChild(link);
+            });
+        });
+    </script>
+
+</body>
+</html>
