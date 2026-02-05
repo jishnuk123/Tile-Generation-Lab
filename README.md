@@ -7,7 +7,7 @@ This project demonstrates the creation of four raster tile sets using **QGIS**, 
 ## 🌐 Web Map URL
 
 👉 **Access the interactive web map here:**  
-https://jishnuk123.github.io/Tile-Generation-Lab
+https://jishnuk123.github.io/Tile-Generation-Lab/index.html
 
 ---
 
@@ -28,7 +28,7 @@ A custom basemap created in **Mapbox Studio**, derived from a dark-style basemap
 `[e.g., 11–15]`
 
 **Screenshot:**  
-![Tile Set 1 – Modified Basemap](assets/tileset1/metatiles/13_&&_1310_2857_&&_1313_2860.png)
+![Tile Set 1 – Modified Basemap](img/tile1.png)
 
 ---
 
@@ -44,7 +44,7 @@ Seattle Open Data Portal – Parks and Open Space
 `[e.g., 11–15]`
 
 **Screenshot:**  
-![Tile Set 2 – Seattle Parks](assets/tileset2/metatiles/11_&&_325_713_&&_328_716.png)
+![Tile Set 2 – Seattle Parks](img/tile2.png)
 
 ---
 
@@ -57,7 +57,7 @@ A combined tile set integrating the custom basemap from Tile Set 1 with the Seat
 `[e.g., 11–15]`
 
 **Screenshot:**  
-![Tile Set 3 – Basemap and Data](assets/tileset3/metatiles/11_&&_327_713_&&_330_716.png)
+![Tile Set 3 – Basemap and Data](img/tile3.png)
 
 ---
 
@@ -70,7 +70,7 @@ A thematic map designed in **Mapbox Studio** using University of Washington colo
 `[e.g., 11–15]`
 
 **Screenshot:**  
-![Tile Set 4 – UW Themed Map](assets/tileset4/metatiles/8_&&_39_87_&&_42_90.png)
+![Tile Set 4 – UW Themed Map](img/tile4.png)
 
 ---
 
